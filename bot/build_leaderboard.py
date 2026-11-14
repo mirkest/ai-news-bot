@@ -20,7 +20,7 @@ from bot.match import build_index, find_match, load_aliases, norm
 from bot.sources import aa, lmarena, openrouter
 
 
-LEADERBOARD_SCHEMA = 2  # меняется, когда формат файла требует пересборки
+LEADERBOARD_SCHEMA = 3  # меняется, когда формат файла требует пересборки
 
 
 def _org_name(org):
@@ -130,7 +130,7 @@ def build():
         entries.append(
             {
                 "rank": None,
-                "name": item["name"],
+                "name": openrouter.display_name(model),
                 "org": item["creator"] or _org_name(openrouter.lab_key(model)),
                 "elo": None,
                 "votes": 0,
