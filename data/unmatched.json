@@ -1,0 +1,252 @@
+[
+ {
+  "rank": 16,
+  "name": "Muse Spark",
+  "org": "meta"
+ },
+ {
+  "rank": 19,
+  "name": "Gemini 3 Pro",
+  "org": "google"
+ },
+ {
+  "rank": 35,
+  "name": "Grok 4.20 Beta 1",
+  "org": "xai"
+ },
+ {
+  "rank": 37,
+  "name": "Qwen3.7-Max-Preview",
+  "org": "alibaba"
+ },
+ {
+  "rank": 39,
+  "name": "GPT-5.5 Instant",
+  "org": "openai"
+ },
+ {
+  "rank": 40,
+  "name": "Gemini 3 Flash",
+  "org": "google"
+ },
+ {
+  "rank": 43,
+  "name": "Grok 4.20 Beta (Reasoning, 0309)",
+  "org": "xai"
+ },
+ {
+  "rank": 44,
+  "name": "Grok 4.20 Multi-Agent Beta (0309)",
+  "org": "xai"
+ },
+ {
+  "rank": 46,
+  "name": "ERNIE 5.1",
+  "org": "baidu"
+ },
+ {
+  "rank": 49,
+  "name": "Grok 4.1 (Thinking)",
+  "org": "xai"
+ },
+ {
+  "rank": 50,
+  "name": "Qwen3.5-Max-Preview",
+  "org": "alibaba"
+ },
+ {
+  "rank": 52,
+  "name": "DeepSeek-V4-Pro (High, 20260813)",
+  "org": "deepseek"
+ },
+ {
+  "rank": 55,
+  "name": "Qwen3.6-Max-Preview",
+  "org": "alibaba"
+ },
+ {
+  "rank": 59,
+  "name": "Dola Seed 2.0 Pro",
+  "org": "bytedance"
+ },
+ {
+  "rank": 63,
+  "name": "DeepSeek-V4-Pro Preview (High)",
+  "org": "deepseek"
+ },
+ {
+  "rank": 68,
+  "name": "GPT-5.3 Chat",
+  "org": "openai"
+ },
+ {
+  "rank": 71,
+  "name": "ERNIE-5.0-Preview (1203)",
+  "org": "baidu"
+ },
+ {
+  "rank": 74,
+  "name": "MiMo-V2-Pro",
+  "org": "xiaomi"
+ },
+ {
+  "rank": 76,
+  "name": "ERNIE 5.0 (0110)",
+  "org": "baidu"
+ },
+ {
+  "rank": 78,
+  "name": "GPT-4.5 Preview (2025-02-27)",
+  "org": "openai"
+ },
+ {
+  "rank": 81,
+  "name": "ChatGPT-4o Latest (20250326)",
+  "org": "openai"
+ },
+ {
+  "rank": 87,
+  "name": "DeepSeek-V4-Flash Preview (High)",
+  "org": "deepseek"
+ },
+ {
+  "rank": 90,
+  "name": "LongCat-Flash-Chat Exp (2602)",
+  "org": "meituan"
+ },
+ {
+  "rank": 91,
+  "name": "DeepSeek-V4-Flash",
+  "org": "deepseek"
+ },
+ {
+  "rank": 95,
+  "name": "Qwen3-Max-Preview",
+  "org": "alibaba"
+ },
+ {
+  "rank": 100,
+  "name": "Grok 4.1 Fast (Reasoning)",
+  "org": "xai"
+ },
+ {
+  "rank": 101,
+  "name": "MiMo-V2-Omni",
+  "org": "xiaomi"
+ },
+ {
+  "rank": 102,
+  "name": "Kimi K2 Thinking Turbo",
+  "org": "moonshot"
+ },
+ {
+  "rank": 103,
+  "name": "GPT-5 Chat",
+  "org": "openai"
+ },
+ {
+  "rank": 104,
+  "name": "amazon-nova-experimental-chat (26-02-10)",
+  "org": "amazon"
+ },
+ {
+  "rank": 106,
+  "name": "Claude Opus 4 (Thinking 16K, 20250514)",
+  "org": "anthropic"
+ },
+ {
+  "rank": 107,
+  "name": "NVIDIA-Nemotron-3-Ultra-550B-A55B (NVFP4)",
+  "org": "nvidia"
+ },
+ {
+  "rank": 110,
+  "name": "Muse Glimmer",
+  "org": "meta"
+ },
+ {
+  "rank": 112,
+  "name": "Qwen3-Max (2025-09-23)",
+  "org": "alibaba"
+ },
+ {
+  "rank": 113,
+  "name": "Qwen3-235B-A22B-Instruct (2507)",
+  "org": "alibaba"
+ },
+ {
+  "rank": 114,
+  "name": "DeepSeek-R1 (0528)",
+  "org": "deepseek"
+ },
+ {
+  "rank": 117,
+  "name": "Grok 4 Fast (Non-Reasoning)",
+  "org": "xai"
+ },
+ {
+  "rank": 118,
+  "name": "Kimi K2 Preview (0905)",
+  "org": "moonshot"
+ },
+ {
+  "rank": 123,
+  "name": "Mistral Large 3",
+  "org": "mistral"
+ },
+ {
+  "rank": 125,
+  "name": "NVIDIA-Nemotron-3.5-Super-VL-120B-A12B (NVFP4)",
+  "org": "nvidia"
+ },
+ {
+  "rank": 129,
+  "name": "Grok 3 Preview (02-24)",
+  "org": "xai"
+ },
+ {
+  "rank": 130,
+  "name": "Grok 4 (0709)",
+  "org": "xai"
+ },
+ {
+  "rank": 137,
+  "name": "Gemini 2.5 Flash Preview (09-2025)",
+  "org": "google"
+ },
+ {
+  "rank": 138,
+  "name": "o1 (2024-12-17)",
+  "org": "openai"
+ },
+ {
+  "rank": 139,
+  "name": "Qwen3-235B-A22B (Non-Thinking)",
+  "org": "alibaba"
+ },
+ {
+  "rank": 140,
+  "name": "Claude Sonnet 4 (Thinking 32K, 20250514)",
+  "org": "anthropic"
+ },
+ {
+  "rank": 142,
+  "name": "LongCat-Flash-Chat",
+  "org": "meituan"
+ },
+ {
+  "rank": 143,
+  "name": "Qwen3-235B-A22B-Thinking (2507)",
+  "org": "alibaba"
+ },
+ {
+  "rank": 147,
+  "name": "Qwen3-VL-235B-A22B-Thinking",
+  "org": "alibaba"
+ },
+ {
+  "rank": 148,
+  "name": "Hunyuan Vision 1.5 Thinking",
+  "org": "tencent"
+ }
+]
