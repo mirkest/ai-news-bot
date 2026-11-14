@@ -16,6 +16,12 @@
  *   DATA_BASE       — https://raw.githubusercontent.com/<user>/<repo>/main/data
  *   WEBHOOK_SECRET  — любая строка, попадает в путь вебхука
  *   INSTALL_KEY     — чтобы открыть /install?key=... и зарегистрировать вебхук
+ *   GH_TOKEN        — токен GitHub с правом Actions: write (secret, необязателен)
+ *   GH_REPO         — user/repo, по умолчанию mirkest/ai-news-bot
+ *
+ * Плюс Cron Trigger (Settings -> Triggers -> Cron): каждые 10 минут воркер
+ * проверяет, не забыл ли GitHub запустить workflow, и при необходимости
+ * запускает его сам.
  */
 
 const PAGE_SIZE = 10;
@@ -340,6 +346,49 @@ async function onCallback(query, env) {
   }
 }
 
+/* ---------------------------------------------------------------- cron */
+
+/**
+ * Страховка от планировщика GitHub: раз в 10 минут проверяем, когда workflow
+ * запускался в последний раз, и если давно — дёргаем его через API.
+ * Работает только когда задан GH_TOKEN.
+ */
+async function dispatchGitHub(env) {
+  const repo = env.GH_REPO || "mirkest/ai-news-bot";
+  const headers = { "User-Agent": "ai-news-bot-cron", Accept: "application/vnd.github+json" };
+
+  let lastRun = null;
+  try {
+    const response = await fetch(`https://api.github.com/repos/${repo}/actions/runs?per_page=1`, {
+      headers,
+      cf: { cacheTtl: 60 },
+    });
+    if (response.ok) {
+      const data = await response.json();
+      lastRun = data.workflow_runs?.[0]?.created_at ?? null;
+    }
+  } catch (error) {
+    console.log("cron: история запусков недоступна", error);
+  }
+
+  if (lastRun && Date.now() - new Date(lastRun).getTime() < 8 * 60 * 1000) {
+    return { skipped: true, reason: "свежий запуск", lastRun };
+  }
+  if (!env.GH_TOKEN) {
+    return { skipped: true, reason: "не задан GH_TOKEN", lastRun };
+  }
+
+  const response = await fetch(
+    `https://api.github.com/repos/${repo}/actions/workflows/watch.yml/dispatches`,
+    {
+      method: "POST",
+      headers: { ...headers, Authorization: `Bearer ${env.GH_TOKEN}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ ref: "main" }),
+    }
+  );
+  return { dispatched: response.status === 204, status: response.status, lastRun };
+}
+
 /* ---------------------------------------------------------------- вебхук */
 
 export default {
@@ -363,6 +412,14 @@ export default {
       return Response.json(result);
     }
 
+    // Ручная проверка планировщика: /cron?key=<INSTALL_KEY>
+    if (request.method === "GET" && url.pathname === "/cron") {
+      if (!env.INSTALL_KEY || url.searchParams.get("key") !== env.INSTALL_KEY) {
+        return new Response("forbidden", { status: 403 });
+      }
+      return Response.json(await dispatchGitHub(env));
+    }
+
     if (!env.WEBHOOK_SECRET) {
       return new Response("WEBHOOK_SECRET не задан", { status: 500 });
     }
@@ -380,5 +437,10 @@ export default {
     }
 
     return new Response("not found", { status: 404 });
+  },
+
+  // Запускается по Cron Trigger из настроек воркера.
+  async scheduled(event, env, ctx) {
+    ctx.waitUntil(dispatchGitHub(env));
   },
 };
