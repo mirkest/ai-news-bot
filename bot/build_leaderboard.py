@@ -20,6 +20,9 @@ from bot.match import build_index, find_match, load_aliases, norm
 from bot.sources import aa, lmarena, openrouter
 
 
+LEADERBOARD_SCHEMA = 2  # меняется, когда формат файла требует пересборки
+
+
 def _org_name(org):
     key = (org or "").strip().lower()
     return ORG_NAMES.get(key, (org or "").strip().title())
@@ -146,6 +149,7 @@ def build():
     payload = {
         "updated": time.strftime("%Y-%m-%d", time.gmtime()),
         "fetched_at": int(time.time()),
+        "schema": LEADERBOARD_SCHEMA,
         "board": config,
         "board_date": board_date,
         "aa_count": len(aa_models),
@@ -184,6 +188,8 @@ def is_stale(spec):
         return True
     # Появился ключ Artificial Analysis, а рейтинг собран без него — пересобираем сразу.
     if os.environ.get("AA_API_KEY") and not data.get("aa_count"):
+        return True
+    if data.get("schema") != LEADERBOARD_SCHEMA:
         return True
     return time.time() - fetched_at > hours * 3600
 
