@@ -58,15 +58,18 @@ def build():
     entries, unmatched = [], []
 
     aa_models = aa.scored(aa.fetch_models())
+    aa_models.sort(key=lambda item: -item["index"])
+    for place, item in enumerate(aa_models, start=1):
+        item["place"] = place
+
     aa_pairs = []
     for item in aa_models:
         match = find_match(item["name"], item["creator"].lower(), models, index, aliases)
         if match:
             aa_pairs.append((match["id"], item))
-    aa_pairs.sort(key=lambda pair: -pair[1]["index"])
-    aa_rank, aa_by_or = {}, {}
-    for place, (or_id, item) in enumerate(aa_pairs, start=1):
-        aa_rank.setdefault(or_id, place)
+
+    aa_by_or = {}
+    for or_id, item in aa_pairs:
         aa_by_or.setdefault(or_id, item)
     print(f"[aa] моделей с индексом: {len(aa_models)}, сопоставлено: {len(aa_pairs)}")
 
@@ -100,7 +103,7 @@ def build():
             if aa_item:
                 entry["aa"] = {
                     "i": round(aa_item["index"], 1),
-                    "r": aa_rank.get(match["id"]),
+                    "r": aa_item["place"],
                 }
         else:
             entry["lab"] = _is_lab_org(org)
@@ -109,13 +112,44 @@ def build():
 
         entries.append(entry)
 
+    # Модели, которые есть у Artificial Analysis, но ещё не попали в LMArena:
+    # именно они самые свежие, поэтому без них рейтинг «ума» неполный.
+    by_id = {model["id"]: model for model in models}
+    covered = {entry["or"] for entry in entries if entry.get("or")}
+    extra = 0
+    for or_id, item in aa_by_or.items():
+        if or_id in covered:
+            continue
+        model = by_id.get(or_id)
+        if not model:
+            continue
+        price = openrouter.prices(model)
+        entries.append(
+            {
+                "rank": None,
+                "name": item["name"],
+                "org": item["creator"] or _org_name(openrouter.lab_key(model)),
+                "elo": None,
+                "votes": 0,
+                "lab": openrouter.is_lab(model),
+                "in": None if price["in"] is None else round(price["in"], 4),
+                "out": None if price["out"] is None else round(price["out"], 4),
+                "ctx": openrouter.context(model),
+                "mods": openrouter.sort_modalities(openrouter.input_modalities(model)),
+                "or": or_id,
+                "aa": {"i": round(item["index"], 1), "r": item["place"]},
+            }
+        )
+        extra += 1
+    print(f"[aa] добавлено моделей без LMArena: {extra}")
+
     payload = {
         "updated": time.strftime("%Y-%m-%d", time.gmtime()),
         "fetched_at": int(time.time()),
         "board": config,
         "board_date": board_date,
-        "aa_count": len(aa_pairs),
-        "source": "LMArena (текст) + OpenRouter pricing + Artificial Analysis",
+        "aa_count": len(aa_models),
+        "source": "Artificial Analysis + LMArena + OpenRouter pricing",
         "models": entries,
     }
 

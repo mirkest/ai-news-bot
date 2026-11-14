@@ -1,4 +1,4 @@
-/**
+﻿/**
  * AI-news bot: интерактивная часть.
  *
  * Cloudflare Worker принимает вебхук Telegram и отвечает на команды:
@@ -129,21 +129,31 @@ async function loadData(env, name) {
 
 /* ---------------------------------------------------------------- рейтинг */
 
-function topList(board, kind) {
+function rankList(board, kind, sort) {
   const models = board.models || [];
   const pool = kind === "labs" ? models.filter((model) => model.lab) : models;
-  return pool.slice(0, PAGE_SIZE * MAX_PAGES);
+  const ranked =
+    sort === "elo"
+      ? pool.filter((model) => model.elo != null).sort((a, b) => b.elo - a.elo)
+      : pool.filter((model) => model.aa).sort((a, b) => b.aa.i - a.aa.i);
+  return ranked.slice(0, PAGE_SIZE * MAX_PAGES);
 }
 
-function renderTop(board, kind, requestedPage) {
-  const list = topList(board, kind);
+function renderTop(board, kind, requestedPage, sort = "aa") {
+  const list = rankList(board, kind, sort);
   const pages = Math.max(1, Math.ceil(list.length / PAGE_SIZE));
   const page = Math.min(Math.max(1, requestedPage), pages);
   const slice = list.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
+  const label = sort === "elo" ? "LMArena Elo" : "Artificial Analysis";
+  const dateLine =
+    sort === "elo" && board.board_date
+      ? `LMArena ${prettyDate(board.board_date)} · обновлено ${prettyDate(board.updated)}`
+      : `${label} · обновлено ${prettyDate(board.updated)}`;
+
   const lines = [
     `🏆 <b>Топ-50 · ${kind === "labs" ? "топ-лаборатории" : "все модели"}</b>`,
-    `<i>LMArena · ${esc(prettyDate(board.board_date) || board.updated || "")}</i>`,
+    `<i>${esc(dateLine)}</i>`,
     "",
   ];
 
@@ -152,7 +162,8 @@ function renderTop(board, kind, requestedPage) {
     lines.push(`<b>${place}.</b> ${esc(model.name)} — ${esc(model.org)}`);
     const bits = [];
     if (model.aa) bits.push(`🧠 ${model.aa.i} AA · #${model.aa.r}`);
-    bits.push(`${Math.round(model.elo)} Elo`, priceText(model));
+    if (model.elo != null) bits.push(`${Math.round(model.elo)} Elo`);
+    bits.push(priceText(model));
     if (model.ctx) bits.push(ctx(model.ctx));
     const icons = sortMods(model.mods).map((mod) => MOD_ICONS[mod]).filter(Boolean).join("");
     if (icons) bits.push(icons);
@@ -164,17 +175,21 @@ function renderTop(board, kind, requestedPage) {
   return { text: lines.join("\n"), page, pages };
 }
 
-function topKeyboard(kind, page, pages) {
+function topKeyboard(kind, sort, page, pages) {
   return {
     inline_keyboard: [
       [
-        { text: "🌍 Все", callback_data: `t|all|${kind === "all" ? page : 1}` },
-        { text: "🏢 Топ-лабы", callback_data: `t|labs|${kind === "labs" ? page : 1}` },
+        { text: "🌍 Все", callback_data: `t|all|${sort}|${kind === "all" ? page : 1}` },
+        { text: "🏢 Топ-лабы", callback_data: `t|labs|${sort}|${kind === "labs" ? page : 1}` },
       ],
       [
-        { text: "⬅️", callback_data: `t|${kind}|${Math.max(1, page - 1)}` },
+        { text: "🧠 AA", callback_data: `t|${kind}|aa|1` },
+        { text: "📊 LMArena", callback_data: `t|${kind}|elo|1` },
+      ],
+      [
+        { text: "⬅️", callback_data: `t|${kind}|${sort}|${Math.max(1, page - 1)}` },
         { text: `${page}/${pages}`, callback_data: "x" },
-        { text: "➡️", callback_data: `t|${kind}|${Math.min(pages, page + 1)}` },
+        { text: "➡️", callback_data: `t|${kind}|${sort}|${Math.min(pages, page + 1)}` },
       ],
     ],
   };
@@ -196,7 +211,7 @@ function startText() {
 function startKeyboard() {
   return {
     inline_keyboard: [
-      [{ text: "🏆 Рейтинг моделей", callback_data: "t|all|1" }],
+      [{ text: "🏆 Рейтинг моделей", callback_data: "t|all|aa|1" }],
       [
         { text: "🆕 Что нового", callback_data: "cmd|new" },
         { text: "ℹ️ Помощь", callback_data: "cmd|help" },
@@ -209,9 +224,10 @@ function helpText() {
   return [
     "ℹ️ <b>Как это работает</b>",
     "",
-    "/top — топ-50 моделей по LMArena с ценами и контекстом",
-    "/top 21 — сразу с 21-й позиции",
+    "/top — топ-50 по Artificial Analysis с ценами и контекстом",
+    "/top elo — тот же топ, но по рейтингу LMArena",
     "/top labs — только топ-лаборатории",
+    "/top 21 — сразу с 21-й позиции",
     "/new — что вышло за последние 7 дней",
     "/model &lt;название&gt; — карточка модели",
     "",
@@ -274,10 +290,12 @@ async function onMessage(message, env) {
 
     if (command === "/top") {
       const board = await loadData(env, "leaderboard.json");
-      const kind = /^(labs|лабы|топ)$/i.test(argument) ? "labs" : "all";
-      const page = /^\d+$/.test(argument) ? Math.ceil(Number(argument) / PAGE_SIZE) : 1;
-      const { text: body, page: current, pages } = renderTop(board, kind, page);
-      return send(env, chatId, body, topKeyboard(kind, current, pages));
+      const arg = argument.toLowerCase();
+      const kind = /^(labs|лабы|топ)$/.test(arg) ? "labs" : "all";
+      const sort = /^(elo|lmarena|арена)$/.test(arg) ? "elo" : "aa";
+      const page = /^\d+$/.test(arg) ? Math.ceil(Number(arg) / PAGE_SIZE) : 1;
+      const { text: body, page: current, pages } = renderTop(board, kind, page, sort);
+      return send(env, chatId, body, topKeyboard(kind, sort, current, pages));
     }
 
     if (command === "/new") {
@@ -321,27 +339,35 @@ async function onCallback(query, env) {
   const data = query.data || "";
   if (data === "x") return;
 
-  const [kindTag, a, b] = data.split("|");
+  const [kindTag, a, b, c] = data.split("|");
 
   try {
     if (kindTag === "t") {
+      const kind = a || "all";
+      let sort = b || "aa";
+      let pageNum = Number(c) || 1;
+      if (/^\d+$/.test(sort)) {
+        // старые кнопки: t|all|2
+        pageNum = Number(sort);
+        sort = "aa";
+      }
       const board = await loadData(env, "leaderboard.json");
-      const { text, page, pages } = renderTop(board, a, Number(b) || 1);
-      await edit(env, chatId, messageId, text, topKeyboard(a, page, pages));
+      const { text, page, pages } = renderTop(board, kind, pageNum, sort);
+      await edit(env, chatId, messageId, text, topKeyboard(kind, sort, page, pages));
       return;
     }
 
     if (kindTag === "cmd" && a === "new") {
       const recent = await loadData(env, "recent.json");
       await edit(env, chatId, messageId, newText(recent), {
-        inline_keyboard: [[{ text: "🏆 Рейтинг", callback_data: "t|all|1" }]],
+        inline_keyboard: [[{ text: "🏆 Рейтинг", callback_data: "t|all|aa|1" }]],
       });
       return;
     }
 
     if (kindTag === "cmd" && a === "help") {
       await edit(env, chatId, messageId, helpText(), {
-        inline_keyboard: [[{ text: "🏆 Рейтинг", callback_data: "t|all|1" }]],
+        inline_keyboard: [[{ text: "🏆 Рейтинг", callback_data: "t|all|aa|1" }]],
       });
     }
   } catch (error) {
