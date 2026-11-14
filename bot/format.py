@@ -73,10 +73,16 @@ def new_model_post(model, arena=None):
     lab = lab_name(model) or lab_key(model).title()
     lines = [f"🆕 <b>{esc(name)}</b>", f"{esc(lab)} · {date_str(model.get('created'))}", ""]
 
-    if arena and arena.get("elo"):
-        lines.append(f"🧠 Ум: {round(arena['elo'])} Elo · #{arena['rank']} в LMArena")
+    aa = (arena or {}).get("aa")
+    elo = arena.get("elo") if arena else None
+    if aa:
+        lines.append(f"🧠 Ум: {aa['i']} AA Index · #{aa['r']} в мире")
+        if elo:
+            lines.append(f"    {round(elo)} Elo · #{arena['rank']} в LMArena")
+    elif elo:
+        lines.append(f"🧠 Ум: {round(elo)} Elo · #{arena['rank']} в LMArena")
     else:
-        lines.append("🧠 Ум: оценки LMArena пока нет")
+        lines.append("🧠 Ум: оценок пока нет")
 
     price = prices(model)
     if price["in"] == 0 and price["out"] == 0:

@@ -16,7 +16,7 @@ from bot.config import (
     UNMATCHED_PATH,
 )
 from bot.match import build_index, find_match, load_aliases, norm
-from bot.sources import lmarena, openrouter
+from bot.sources import aa, lmarena, openrouter
 
 
 def _org_name(org):
@@ -56,6 +56,19 @@ def build():
     ordered = _best_rows(rows)
     entries, unmatched = [], []
 
+    aa_models = aa.scored(aa.fetch_models())
+    aa_pairs = []
+    for item in aa_models:
+        match = find_match(item["name"], item["creator"].lower(), models, index, aliases)
+        if match:
+            aa_pairs.append((match["id"], item))
+    aa_pairs.sort(key=lambda pair: -pair[1]["index"])
+    aa_rank, aa_by_or = {}, {}
+    for place, (or_id, item) in enumerate(aa_pairs, start=1):
+        aa_rank.setdefault(or_id, place)
+        aa_by_or.setdefault(or_id, item)
+    print(f"[aa] моделей с индексом: {len(aa_models)}, сопоставлено: {len(aa_pairs)}")
+
     for rank, row in enumerate(ordered, start=1):
         name = (row.get("model_name") or "").strip()
         org = (row.get("organization") or "").strip()
@@ -82,6 +95,12 @@ def build():
                     "lab": openrouter.is_lab(match),
                 }
             )
+            aa_item = aa_by_or.get(match["id"])
+            if aa_item:
+                entry["aa"] = {
+                    "i": round(aa_item["index"], 1),
+                    "r": aa_rank.get(match["id"]),
+                }
         else:
             entry["lab"] = _is_lab_org(org)
             if rank <= 150:
@@ -94,7 +113,8 @@ def build():
         "fetched_at": int(time.time()),
         "board": config,
         "board_date": board_date,
-        "source": "LMArena (overall) + OpenRouter pricing",
+        "aa_count": len(aa_pairs),
+        "source": "LMArena (текст) + OpenRouter pricing + Artificial Analysis",
         "models": entries,
     }
 

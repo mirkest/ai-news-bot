@@ -27,6 +27,7 @@ jobs:
       PYTHONUNBUFFERED: "1"
       TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
       TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      AA_API_KEY: ${{ secrets.AA_API_KEY }}
 
     steps:
       - uses: actions/checkout@v4

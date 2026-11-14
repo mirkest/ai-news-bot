@@ -150,7 +150,9 @@ function renderTop(board, kind, requestedPage) {
   slice.forEach((model, index) => {
     const place = (page - 1) * PAGE_SIZE + index + 1;
     lines.push(`<b>${place}.</b> ${esc(model.name)} — ${esc(model.org)}`);
-    const bits = [`${Math.round(model.elo)} Elo`, priceText(model)];
+    const bits = [];
+    if (model.aa) bits.push(`🧠 ${model.aa.i} AA · #${model.aa.r}`);
+    bits.push(`${Math.round(model.elo)} Elo`, priceText(model));
     if (model.ctx) bits.push(ctx(model.ctx));
     const icons = sortMods(model.mods).map((mod) => MOD_ICONS[mod]).filter(Boolean).join("");
     if (icons) bits.push(icons);
@@ -223,6 +225,7 @@ function helpText() {
 
 function modelCard(model) {
   const lines = [`<b>${esc(model.name)}</b> — ${esc(model.org)}`];
+  if (model.aa) lines.push(`🧠 ${model.aa.i} AA Index · #${model.aa.r} в мире`);
   if (model.elo) lines.push(`🏆 ${Math.round(model.elo)} Elo · #${model.rank} в LMArena`);
   lines.push(`💵 ${priceText(model)} за 1M токенов`);
   if (model.ctx) lines.push(`📏 Контекст: ${ctx(model.ctx)}`);
