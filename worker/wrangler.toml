@@ -1,0 +1,12 @@
+# Для тех, кто деплоит воркер через wrangler вместо панели Cloudflare.
+# В панели этот файл не нужен.
+name = "ai-news-bot"
+main = "worker.js"
+compatibility_date = "2026-11-01"
+
+# Секреты задаются отдельно:
+#   wrangler secret put BOT_TOKEN
+#   wrangler secret put WEBHOOK_SECRET
+#   wrangler secret put INSTALL_KEY
+# [vars]
+#   DATA_BASE = "https://raw.githubusercontent.com/<user>/<repo>/main/data"
