@@ -1,0 +1,67 @@
+name: AI news bot
+
+on:
+  schedule:
+    # каждые 10 минут; GitHub может задержать запуск на пиках нагрузки
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Только показать посты в логе, ничего не отправлять"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ai-news-bot
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      PYTHONPATH: ${{ github.workspace }}
+      PYTHONUNBUFFERED: "1"
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Зависимости
+        run: pip install -r requirements.txt
+
+      - name: Обновить рейтинг (раз в 20 часов)
+        continue-on-error: true
+        run: python -m bot.build_leaderboard --if-stale 20h
+
+      - name: Меню команд бота
+        run: python -m bot.telegram_setup
+
+      - name: Проверить новые модели и опубликовать
+        env:
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: python -m bot.main
+
+      - name: Отметка активности (защита от отключения cron)
+        run: python -m bot.keepalive
+
+      - name: Сохранить состояние
+        run: |
+          git config user.name "ai-news-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add state.json data .keepalive
+          if git diff --cached --quiet; then
+            echo "изменений нет"
+            exit 0
+          fi
+          git commit -m "chore: состояние бота [skip ci]"
+          git push
