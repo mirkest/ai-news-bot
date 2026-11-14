@@ -45,9 +45,9 @@ jobs:
           test -n "$TELEGRAM_BOT_TOKEN" || { echo "::error::Не задан секрет TELEGRAM_BOT_TOKEN"; exit 1; }
           test -n "$TELEGRAM_CHAT_ID" || { echo "::error::Не задан секрет TELEGRAM_CHAT_ID"; exit 1; }
 
-      - name: Обновить рейтинг (раз в 20 часов)
+      - name: Обновить рейтинг (раз в 6 часов)
         continue-on-error: true
-        run: python -m bot.build_leaderboard --if-stale 20h
+        run: python -m bot.build_leaderboard --if-stale 6h
 
       - name: Меню команд бота
         run: python -m bot.telegram_setup

@@ -14,6 +14,7 @@ import sys
 import time
 
 from bot.config import (
+    AA_WINDOW_DAYS,
     DATA_DIR,
     LEADERBOARD_PATH,
     MAX_POSTS_PER_RUN,
@@ -121,6 +122,26 @@ def find_new(models, state):
     return sorted(fresh, key=lambda model: model.get("created") or 0)
 
 
+def find_aa_new(board, state, days=AA_WINDOW_DAYS):
+    """Модели, которые AA уже оценил, но OpenRouter ещё не принёс.
+
+    Это второй детектор: он ловит релизы, до которых OpenRouter не добрался,
+    но с задержкой — рейтинг пересобирается раз в несколько часов.
+    """
+    seen = set(state.get("aa_seen") or [])
+    cutoff = time.strftime("%Y-%m-%d", time.gmtime(time.time() - days * 86400))
+    found = []
+    for entry in board.values():
+        or_id = entry.get("or")
+        release = entry.get("rel")
+        if not or_id or not release or release < cutoff:
+            continue
+        if or_id in seen:
+            continue
+        found.append(entry)
+    return found
+
+
 def update_recent(models_by_id, board):
     try:
         data = json.loads(RECENT_PATH.read_text(encoding="utf-8"))
@@ -185,6 +206,9 @@ def main():
     if first_run:
         state["ids"] = sorted(model["id"] for model in models)
         state["slugs"] = sorted({slug_base(model) for model in models})
+        state["aa_seen"] = sorted(
+            entry["or"] for entry in board.values() if entry.get("or") and entry.get("rel")
+        )
         if not state["announced"]:
             text = hello_post()
             if dry_run:
@@ -198,14 +222,19 @@ def main():
         return
 
     fresh = find_new(models, state)
-    print(f"[new] найдено: {len(fresh)}")
+    by_id = {model["id"]: model for model in models}
+    fresh_ids = {model["id"] for model in fresh}
+    aa_extra = [entry for entry in find_aa_new(board, state) if entry["or"] not in fresh_ids]
+    print(f"[new] OpenRouter: {len(fresh)}, Artificial Analysis: {len(aa_extra)}")
 
-    posts, digest = fresh[:MAX_POSTS_PER_RUN], fresh[MAX_POSTS_PER_RUN:]
+    queue = [(model, board.get(model["id"])) for model in fresh]
+    queue += [(by_id[entry["or"]], entry) for entry in aa_extra if entry["or"] in by_id]
+
+    posts, digest = queue[:MAX_POSTS_PER_RUN], queue[MAX_POSTS_PER_RUN:]
     if len(digest) == 1:
-        posts, digest = fresh, []
+        posts, digest = queue, []
 
-    for model in posts:
-        arena = board.get(model["id"])
+    for model, arena in posts:
         text = new_model_post(model, arena)
         if dry_run:
             print("\n===== пост =====\n" + text)
@@ -224,7 +253,7 @@ def main():
             )
 
     if digest:
-        text = digest_post(digest, board)
+        text = digest_post([model for model, _ in digest], board)
         if dry_run:
             print("\n===== дайджест =====\n" + text)
         else:
@@ -236,6 +265,10 @@ def main():
         state["slugs"] = sorted(set(state["slugs"]) | {slug_base(model) for model in models})
         state["ids"] = state["ids"][-5000:]
         state["slugs"] = state["slugs"][-5000:]
+        state["aa_seen"] = sorted(
+            set(state.get("aa_seen") or [])
+            | {entry["or"] for entry in board.values() if entry.get("or") and entry.get("rel")}
+        )[-5000:]
         update_recent({model["id"]: model for model in models}, board)
         if chat_id:
             refresh_pending(token, chat_id, state, board)

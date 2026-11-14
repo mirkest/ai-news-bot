@@ -20,7 +20,7 @@ from bot.match import build_index, find_match, load_aliases, norm
 from bot.sources import aa, lmarena, openrouter
 
 
-LEADERBOARD_SCHEMA = 3  # меняется, когда формат файла требует пересборки
+LEADERBOARD_SCHEMA = 4  # меняется, когда формат файла требует пересборки
 
 
 def _org_name(org):
@@ -108,6 +108,7 @@ def build():
                     "i": round(aa_item["index"], 1),
                     "r": aa_item["place"],
                 }
+                entry["rel"] = aa_item.get("release")
         else:
             entry["lab"] = _is_lab_org(org)
             if rank <= 150:
@@ -141,6 +142,7 @@ def build():
                 "mods": openrouter.sort_modalities(openrouter.input_modalities(model)),
                 "or": or_id,
                 "aa": {"i": round(item["index"], 1), "r": item["place"]},
+                "rel": item.get("release"),
             }
         )
         extra += 1

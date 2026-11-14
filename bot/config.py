@@ -82,5 +82,8 @@ MAX_POSTS_PER_RUN = 3
 # Насколько старую по дате создания модель ещё считаем «новой».
 NEW_WINDOW_DAYS = 7
 
+# Окно для второго детектора — релизов из Artificial Analysis.
+AA_WINDOW_DAYS = 7
+
 # Сколько дней храним записи для команды /new.
 RECENT_DAYS = 30
