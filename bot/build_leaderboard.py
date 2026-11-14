@@ -5,6 +5,7 @@
 
 import argparse
 import json
+import os
 import sys
 import time
 
@@ -146,6 +147,9 @@ def is_stale(spec):
         data = json.loads(LEADERBOARD_PATH.read_text(encoding="utf-8"))
         fetched_at = int(data.get("fetched_at") or 0)
     except (OSError, ValueError):
+        return True
+    # Появился ключ Artificial Analysis, а рейтинг собран без него — пересобираем сразу.
+    if os.environ.get("AA_API_KEY") and not data.get("aa_count"):
         return True
     return time.time() - fetched_at > hours * 3600
 
