@@ -20,7 +20,7 @@ from bot.match import build_index, find_match, load_aliases, norm
 from bot.sources import aa, lmarena, openrouter
 
 
-LEADERBOARD_SCHEMA = 4  # меняется, когда формат файла требует пересборки
+LEADERBOARD_SCHEMA = 5  # меняется, когда формат файла требует пересборки
 
 
 def _org_name(org):
@@ -29,7 +29,8 @@ def _org_name(org):
 
 
 def _is_lab_org(org):
-    return (org or "").strip().lower() in ARENA_ORGS
+    value = (org or "").strip().lower()
+    return value in ARENA_ORGS or any(key.replace("-", " ") in value for key in ARENA_ORGS)
 
 
 def _best_rows(rows):
@@ -147,6 +148,30 @@ def build():
         )
         extra += 1
     print(f"[aa] добавлено моделей без LMArena: {extra}")
+
+    # Совсем новые модели: есть у AA, но их ещё нет в OpenRouter.
+    # Постить их можно, только показывая индекс и цену из AA.
+    covered_names = {norm(entry["name"]) for entry in entries}
+    unmatched_aa = 0
+    for item in aa_models:
+        if norm(item["name"]) in covered_names:
+            continue
+        entries.append(
+            {
+                "rank": None,
+                "name": item["name"],
+                "org": item["creator"] or "",
+                "elo": None,
+                "votes": 0,
+                "lab": _is_lab_org(item["creator"]),
+                "aa": {"i": round(item["index"], 1), "r": item["place"]},
+                "rel": item.get("release"),
+                "aa_in": item.get("price_in"),
+                "aa_out": item.get("price_out"),
+            }
+        )
+        unmatched_aa += 1
+    print(f"[aa] моделей вне OpenRouter: {unmatched_aa}")
 
     payload = {
         "updated": time.strftime("%Y-%m-%d", time.gmtime()),

@@ -23,8 +23,9 @@ from bot.config import (
     RECENT_PATH,
     STATE_PATH,
 )
-from bot.format import digest_post, hello_post, new_model_post, recent_item
+from bot.format import aa_only_post, digest_post, hello_post, new_model_post, recent_item
 from bot.http import post_json
+from bot.match import norm
 from bot.sources import openrouter
 
 API = "https://api.telegram.org/bot{token}/{method}"
@@ -132,11 +133,11 @@ def find_aa_new(board, state, days=AA_WINDOW_DAYS):
     cutoff = time.strftime("%Y-%m-%d", time.gmtime(time.time() - days * 86400))
     found = []
     for entry in board.values():
-        or_id = entry.get("or")
         release = entry.get("rel")
-        if not or_id or not release or release < cutoff:
+        if not release or release < cutoff:
             continue
-        if or_id in seen:
+        key = entry.get("or") or "n:" + norm(entry.get("name") or "")
+        if key in seen:
             continue
         found.append(entry)
     return found
@@ -207,7 +208,9 @@ def main():
         state["ids"] = sorted(model["id"] for model in models)
         state["slugs"] = sorted({slug_base(model) for model in models})
         state["aa_seen"] = sorted(
-            entry["or"] for entry in board.values() if entry.get("or") and entry.get("rel")
+            entry.get("or") or "n:" + norm(entry.get("name") or "")
+            for entry in board.values()
+            if entry.get("rel")
         )
         if not state["announced"]:
             text = hello_post()
@@ -224,24 +227,29 @@ def main():
     fresh = find_new(models, state)
     by_id = {model["id"]: model for model in models}
     fresh_ids = {model["id"] for model in fresh}
-    aa_extra = [entry for entry in find_aa_new(board, state) if entry["or"] not in fresh_ids]
-    print(f"[new] OpenRouter: {len(fresh)}, Artificial Analysis: {len(aa_extra)}")
 
     queue = [(model, board.get(model["id"])) for model in fresh]
-    queue += [(by_id[entry["or"]], entry) for entry in aa_extra if entry["or"] in by_id]
+    aa_extra = 0
+    for entry in find_aa_new(board, state):
+        or_id = entry.get("or")
+        if or_id and or_id in fresh_ids:
+            continue
+        queue.append((by_id.get(or_id) if or_id else None, entry))
+        aa_extra += 1
+    print(f"[new] OpenRouter: {len(fresh)}, Artificial Analysis: {aa_extra}")
 
     posts, digest = queue[:MAX_POSTS_PER_RUN], queue[MAX_POSTS_PER_RUN:]
     if len(digest) == 1:
         posts, digest = queue, []
 
     for model, arena in posts:
-        text = new_model_post(model, arena)
+        text = new_model_post(model, arena) if model else aa_only_post(arena)
         if dry_run:
             print("\n===== пост =====\n" + text)
             continue
         message_id = send_message(token, chat_id, text)
-        print(f"[post] {model['id']} -> message {message_id}")
-        if not arena:
+        print(f"[post] {model['id'] if model else arena.get('name')} -> message {message_id}")
+        if model and not arena:
             state["pending"].append(
                 {
                     "or": model["id"],
@@ -253,7 +261,7 @@ def main():
             )
 
     if digest:
-        text = digest_post([model for model, _ in digest], board)
+        text = digest_post(digest)
         if dry_run:
             print("\n===== дайджест =====\n" + text)
         else:
@@ -267,7 +275,11 @@ def main():
         state["slugs"] = state["slugs"][-5000:]
         state["aa_seen"] = sorted(
             set(state.get("aa_seen") or [])
-            | {entry["or"] for entry in board.values() if entry.get("or") and entry.get("rel")}
+            | {
+                entry.get("or") or "n:" + norm(entry.get("name") or "")
+                for entry in board.values()
+                if entry.get("rel")
+            }
         )[-5000:]
         update_recent({model["id"]: model for model in models}, board)
         if chat_id:

@@ -46,12 +46,15 @@ def scored(models):
         if value is None:
             continue
         performance = model.get("performance") or {}
+        pricing = model.get("pricing") or {}
         result.append(
             {
                 "name": model.get("name") or "",
                 "creator": ((model.get("model_creator") or {}).get("name") or ""),
                 "index": float(value),
                 "speed": performance.get("mean_output_tokens_per_second"),
+                "price_in": pricing.get("price_1m_input_tokens"),
+                "price_out": pricing.get("price_1m_output_tokens"),
                 "release": model.get("release_date"),
             }
         )

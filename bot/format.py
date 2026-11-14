@@ -114,17 +114,53 @@ def new_model_post(model, arena=None):
     return "\n".join(lines)
 
 
-def digest_post(models, arena_by_id):
-    """Один компактный пост, если за запуск нашлось много моделей."""
+def iso_date(value):
+    parts = (value or "").split("-")
+    if len(parts) == 3:
+        return f"{parts[2]}.{parts[1]}.{parts[0]}"
+    return value or ""
+
+
+def aa_only_post(entry):
+    """Пост о модели, которой ещё нет в OpenRouter — только данные AA."""
+    aa = entry.get("aa") or {}
+    org = entry.get("org") or ""
+    released = iso_date(entry.get("rel"))
+    lines = [f'🆕 <b>{esc(entry.get("name"))}</b>']
+    lines.append(f"{esc(org)} · {released}" if released else esc(org))
+    lines.append("")
+    if aa:
+        lines.append(f'🧠 Ум: {aa["i"]} AA Index · #{aa["r"]} в мире')
+    if entry.get("aa_in") is not None:
+        lines.append(f'💵 ${money(entry.get("aa_in"))} вход / ${money(entry.get("aa_out"))} выход за 1M')
+    lines.append("")
+    lines.append("<i>В OpenRouter модели ещё нет — контекст и модальности появятся позже.</i>")
+    return "\n".join(lines)
+
+
+def digest_post(items):
+    """items — пары (модель OpenRouter или None, строка рейтинга)."""
     lines = ["🗞 <b>Ещё новые модели</b>", ""]
-    for model in models:
+    for model, arena in items:
+        arena = arena or {}
+        if model is None:
+            aa = arena.get("aa") or {}
+            score = f'AA {aa["i"]}' if aa else "—"
+            lines.append(f'• {esc(arena.get("name"))} — {esc(arena.get("org") or "")} · {score}')
+            continue
         name = display_name(model)
         lab = lab_name(model) or lab_key(model).title()
         price = prices(model)
         tail = "бесплатно" if price["in"] == 0 and price["out"] == 0 else f"${money(price['in'])}/${money(price['out'])}"
-        arena = arena_by_id.get(model["id"])
-        elo = f" · {round(arena['elo'])} Elo" if arena and arena.get("elo") else ""
-        lines.append(f'• <a href="https://openrouter.ai/{esc(model["id"])}">{esc(name)}</a> — {esc(lab)} · {tail}{elo}')
+        bits = [tail]
+        if arena.get("aa"):
+            bits.append(f'AA {arena["aa"]["i"]}')
+        elif arena.get("elo"):
+            bits.append(f'{round(arena["elo"])} Elo')
+        lines.append(
+            f'• <a href="https://openrouter.ai/{esc(model["id"])}">{esc(name)}</a> — {esc(lab)} · '
+            + " · ".join(bits)
+        )
     return "\n".join(lines)
 
 
