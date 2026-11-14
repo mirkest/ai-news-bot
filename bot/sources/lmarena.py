@@ -20,8 +20,9 @@ PAGE = 100
 MAX_ROWS = 900
 OVERALL_TARGET = 500
 
-# Сначала основной рейтинг, затем его style-control вариант.
-CONFIGS = ("text", "text_style_control")
+# В датасете LMArena основная текстовая доска называется text_style_control:
+# конфигурации с именем "text" больше нет. Если появится — её можно добавить сюда.
+CONFIGS = ("text_style_control",)
 
 
 def _rows_from_api(config):

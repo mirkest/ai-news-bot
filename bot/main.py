@@ -172,7 +172,7 @@ def main():
     args = parser.parse_args()
 
     dry_run = args.dry_run or os.environ.get("DRY_RUN", "").lower() in {"1", "true", "yes"}
-    token = os.environ.get("TELEGRAM_BOT_TOKEN", "").strip()
+    token = "".join(os.environ.get("TELEGRAM_BOT_TOKEN", "").split())
     chat_id = os.environ.get("TELEGRAM_CHAT_ID", "").strip()
     if not dry_run and (not token or not chat_id):
         raise SystemExit("Нужны TELEGRAM_BOT_TOKEN и TELEGRAM_CHAT_ID")

@@ -27,7 +27,7 @@ SHORT_DESCRIPTION = "Новые ИИ: цены, контекст, рейтинг
 
 
 def main():
-    token = os.environ.get("TELEGRAM_BOT_TOKEN", "").strip()
+    token = "".join(os.environ.get("TELEGRAM_BOT_TOKEN", "").split())
     if not token:
         raise SystemExit("Нужен TELEGRAM_BOT_TOKEN")
 
