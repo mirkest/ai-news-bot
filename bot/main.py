@@ -130,13 +130,17 @@ def find_aa_new(board, state, days=AA_WINDOW_DAYS):
     но с задержкой — рейтинг пересобирается раз в несколько часов.
     """
     seen = set(state.get("aa_seen") or [])
+    known = set(state.get("ids") or [])
     cutoff = time.strftime("%Y-%m-%d", time.gmtime(time.time() - days * 86400))
     found = []
     for entry in board.values():
         release = entry.get("rel")
         if not release or release < cutoff:
             continue
-        key = entry.get("or") or "n:" + norm(entry.get("name") or "")
+        or_id = entry.get("or")
+        if or_id and or_id in known:
+            continue  # OpenRouter уже видел эту модель — пост по ней был или будет
+        key = or_id or "n:" + norm(entry.get("name") or "")
         if key in seen:
             continue
         found.append(entry)
