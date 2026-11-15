@@ -248,5 +248,10 @@
   "rank": 148,
   "name": "Hunyuan Vision 1.5 Thinking",
   "org": "tencent"
+ },
+ {
+  "rank": 150,
+  "name": "Step-3.5-Flash",
+  "org": "stepfun"
  }
 ]
