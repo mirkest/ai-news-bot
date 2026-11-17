@@ -301,6 +301,7 @@
   "openai/gpt-6.1-terra-pro",
   "openai/gpt-6.1-terra-pro:batch",
   "openai/gpt-6.1-terra:batch",
+  "openai/gpt-6.2-astra",
   "openai/gpt-audio",
   "openai/gpt-audio-mini",
   "openai/gpt-chat-latest",
@@ -695,6 +696,7 @@
   "openai/gpt-6.1-sol-pro",
   "openai/gpt-6.1-terra",
   "openai/gpt-6.1-terra-pro",
+  "openai/gpt-6.2-astra",
   "openai/gpt-audio",
   "openai/gpt-audio-mini",
   "openai/gpt-chat-latest",
@@ -852,7 +854,95 @@
   "~z-ai/glm-flash-latest",
   "~z-ai/glm-latest"
  ],
- "pending": [],
+ "pending": [
+  {
+   "or": "openai/gpt-6.2-astra",
+   "chat_id": "@radar_ai_bo",
+   "message_id": 8,
+   "ts": 1794938435,
+   "model": {
+    "id": "openai/gpt-6.2-astra",
+    "canonical_slug": "openai/gpt-6.2-astra-20261117",
+    "hugging_face_id": null,
+    "name": "OpenAI: GPT-6.2 Astra",
+    "created": 1794873824,
+    "description": "",
+    "context_length": 1050000,
+    "architecture": {
+     "modality": "text+image+file->text",
+     "input_modalities": [
+      "file",
+      "image",
+      "text"
+     ],
+     "output_modalities": [
+      "text"
+     ],
+     "tokenizer": "GPT",
+     "instruct_type": null
+    },
+    "pricing": {
+     "prompt": "0.000008",
+     "completion": "0.00004",
+     "web_search": "0.01",
+     "input_cache_read": "0.0000004",
+     "input_cache_write": "0.00001",
+     "overrides": [
+      {
+       "min_prompt_tokens": 272000,
+       "prompt": "0.000016",
+       "completion": "0.00006",
+       "input_cache_read": "0.0000008",
+       "input_cache_write": "0.00002"
+      }
+     ]
+    },
+    "top_provider": {
+     "context_length": 1050000,
+     "max_completion_tokens": 128000,
+     "is_moderated": true
+    },
+    "per_request_limits": null,
+    "supported_parameters": [
+     "include_reasoning",
+     "max_tokens",
+     "reasoning",
+     "reasoning_effort",
+     "response_format",
+     "seed",
+     "structured_outputs",
+     "tool_choice",
+     "tools",
+     "verbosity"
+    ],
+    "default_parameters": {},
+    "supported_voices": null,
+    "knowledge_cutoff": null,
+    "expiration_date": null,
+    "links": {
+     "details": "/api/v1/models/openai/gpt-6.2-astra-20261117/endpoints"
+    },
+    "endpoints": [
+     "/api/v1/chat/completions",
+     "/api/v1/completions",
+     "/api/v1/messages",
+     "/api/v1/responses"
+    ],
+    "reasoning": {
+     "mandatory": true,
+     "default_enabled": true,
+     "supported_efforts": [
+      "max",
+      "xhigh",
+      "high",
+      "medium",
+      "low"
+     ],
+     "default_effort": "medium"
+    }
+   }
+  }
+ ],
  "announced": true,
  "aa_seen": [
   "anthropic/claude-fable-5.1",
