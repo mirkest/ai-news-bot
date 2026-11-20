@@ -210,6 +210,11 @@
   "org": "xai"
  },
  {
+  "rank": 138,
+  "name": "Hy3 preview",
+  "org": "tencent"
+ },
+ {
   "rank": 142,
   "name": "Gemini 2.5 Flash Preview (09-2025)",
   "org": "google"
