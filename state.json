@@ -185,6 +185,7 @@
   "mistralai/mistral-small-3.1-24b-instruct",
   "mistralai/mistral-small-3.2-24b-instruct",
   "mistralai/mixtral-8x22b-instruct",
+  "mistralai/pixtral-large-2502",
   "mistralai/voxtral-small-24b-2507",
   "moondream/moondream3-preview",
   "moondream/moondream3.1-9b-a2b",
@@ -629,6 +630,7 @@
   "mistralai/mistral-small-3.1-24b-instruct-2503",
   "mistralai/mistral-small-3.2-24b-instruct-2506",
   "mistralai/mixtral-8x22b-instruct",
+  "mistralai/pixtral-large-2502",
   "mistralai/voxtral-small-24b-2507",
   "moondream/moondream3-preview",
   "moondream/moondream3.1-9b-a2b",
@@ -1040,6 +1042,63 @@
      ],
      "default_effort": "medium"
     }
+   }
+  },
+  {
+   "or": "mistralai/pixtral-large-2502",
+   "chat_id": "@radar_ai_bo",
+   "message_id": 13,
+   "ts": 1795141816,
+   "model": {
+    "id": "mistralai/pixtral-large-2502",
+    "canonical_slug": "mistralai/pixtral-large-2502",
+    "hugging_face_id": null,
+    "name": "Mistral: Pixtral Large 2502",
+    "created": 1795135865,
+    "description": "Pixtral Large 2502 is the February 2025 version of Mistral AI's large multimodal model, following [Pixtral Large 2411](https://openrouter.ai/mistralai/pixtral-large-2411). It accepts text and image input, including documents, charts, and natural images,...",
+    "context_length": 128000,
+    "architecture": {
+     "modality": "text+image->text",
+     "input_modalities": [
+      "text",
+      "image"
+     ],
+     "output_modalities": [
+      "text"
+     ],
+     "tokenizer": "Mistral",
+     "instruct_type": null
+    },
+    "pricing": {
+     "prompt": "0.000002",
+     "completion": "0.000006"
+    },
+    "top_provider": {
+     "context_length": 128000,
+     "max_completion_tokens": 102400,
+     "is_moderated": true
+    },
+    "per_request_limits": null,
+    "supported_parameters": [
+     "max_tokens",
+     "stop",
+     "temperature",
+     "top_k",
+     "top_p"
+    ],
+    "default_parameters": {},
+    "supported_voices": null,
+    "knowledge_cutoff": null,
+    "expiration_date": null,
+    "links": {
+     "details": "/api/v1/models/mistralai/pixtral-large-2502/endpoints"
+    },
+    "endpoints": [
+     "/api/v1/chat/completions",
+     "/api/v1/completions",
+     "/api/v1/messages",
+     "/api/v1/responses"
+    ]
    }
   }
  ],
