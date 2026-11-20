@@ -1,6 +1,6 @@
 [
  {
-  "rank": 17,
+  "rank": 18,
   "name": "Muse Spark",
   "org": "meta"
  },
@@ -10,243 +10,233 @@
   "org": "google"
  },
  {
-  "rank": 37,
+  "rank": 38,
   "name": "Grok 4.20 Beta 1",
   "org": "xai"
  },
  {
-  "rank": 38,
+  "rank": 40,
   "name": "Qwen3.7-Max-Preview",
   "org": "alibaba"
  },
  {
-  "rank": 40,
+  "rank": 41,
   "name": "GPT-5.5 Instant",
   "org": "openai"
  },
  {
-  "rank": 42,
+  "rank": 44,
   "name": "Gemini 3 Flash",
   "org": "google"
  },
  {
-  "rank": 43,
+  "rank": 45,
   "name": "Grok 4.20 Beta (Reasoning, 0309)",
   "org": "xai"
  },
  {
-  "rank": 45,
+  "rank": 47,
   "name": "Grok 4.20 Multi-Agent Beta (0309)",
   "org": "xai"
  },
  {
-  "rank": 47,
+  "rank": 50,
   "name": "ERNIE 5.1",
   "org": "baidu"
  },
  {
-  "rank": 50,
-  "name": "Qwen3.5-Max-Preview",
-  "org": "alibaba"
- },
- {
-  "rank": 51,
+  "rank": 53,
   "name": "Grok 4.1 (Thinking)",
   "org": "xai"
  },
  {
-  "rank": 53,
+  "rank": 54,
+  "name": "Qwen3.5-Max-Preview",
+  "org": "alibaba"
+ },
+ {
+  "rank": 57,
   "name": "DeepSeek-V4-Pro (High, 20260813)",
   "org": "deepseek"
  },
  {
-  "rank": 56,
+  "rank": 60,
   "name": "Qwen3.6-Max-Preview",
   "org": "alibaba"
  },
  {
-  "rank": 60,
+  "rank": 64,
   "name": "Dola Seed 2.0 Pro",
   "org": "bytedance"
  },
  {
-  "rank": 65,
+  "rank": 69,
   "name": "DeepSeek-V4-Pro Preview (High)",
   "org": "deepseek"
  },
  {
-  "rank": 69,
+  "rank": 73,
   "name": "GPT-5.3 Chat",
   "org": "openai"
  },
  {
-  "rank": 72,
+  "rank": 77,
   "name": "ERNIE-5.0-Preview (1203)",
   "org": "baidu"
  },
  {
-  "rank": 74,
+  "rank": 78,
   "name": "MiMo-V2-Pro",
   "org": "xiaomi"
  },
  {
-  "rank": 77,
+  "rank": 81,
   "name": "ERNIE 5.0 (0110)",
   "org": "baidu"
  },
  {
-  "rank": 79,
+  "rank": 83,
   "name": "GPT-4.5 Preview (2025-02-27)",
   "org": "openai"
  },
  {
-  "rank": 82,
+  "rank": 86,
   "name": "ChatGPT-4o Latest (20250326)",
   "org": "openai"
  },
  {
-  "rank": 88,
+  "rank": 92,
   "name": "DeepSeek-V4-Flash Preview (High)",
   "org": "deepseek"
  },
  {
-  "rank": 91,
+  "rank": 95,
   "name": "LongCat-Flash-Chat Exp (2602)",
   "org": "meituan"
  },
  {
-  "rank": 92,
+  "rank": 96,
   "name": "DeepSeek-V4-Flash",
   "org": "deepseek"
  },
  {
-  "rank": 95,
+  "rank": 99,
   "name": "Qwen3-Max-Preview",
   "org": "alibaba"
  },
  {
-  "rank": 101,
+  "rank": 105,
   "name": "Grok 4.1 Fast (Reasoning)",
   "org": "xai"
  },
  {
-  "rank": 102,
+  "rank": 106,
   "name": "MiMo-V2-Omni",
   "org": "xiaomi"
  },
  {
-  "rank": 103,
+  "rank": 107,
   "name": "Kimi K2 Thinking Turbo",
   "org": "moonshot"
  },
  {
-  "rank": 104,
-  "name": "GPT-5 Chat",
-  "org": "openai"
- },
- {
-  "rank": 105,
-  "name": "amazon-nova-experimental-chat (26-02-10)",
-  "org": "amazon"
- },
- {
-  "rank": 106,
+  "rank": 108,
   "name": "NVIDIA-Nemotron-3-Ultra-550B-A55B (NVFP4)",
   "org": "nvidia"
  },
  {
-  "rank": 108,
+  "rank": 109,
+  "name": "amazon-nova-experimental-chat (26-02-10)",
+  "org": "amazon"
+ },
+ {
+  "rank": 110,
+  "name": "GPT-5 Chat",
+  "org": "openai"
+ },
+ {
+  "rank": 112,
   "name": "Claude Opus 4 (Thinking 16K, 20250514)",
   "org": "anthropic"
  },
  {
-  "rank": 110,
+  "rank": 113,
   "name": "Muse Glimmer",
   "org": "meta"
  },
  {
-  "rank": 113,
+  "rank": 117,
   "name": "Qwen3-Max (2025-09-23)",
   "org": "alibaba"
  },
  {
-  "rank": 114,
+  "rank": 119,
   "name": "Qwen3-235B-A22B-Instruct (2507)",
   "org": "alibaba"
  },
  {
-  "rank": 117,
+  "rank": 120,
   "name": "DeepSeek-R1 (0528)",
   "org": "deepseek"
  },
  {
-  "rank": 118,
-  "name": "Kimi K2 Preview (0905)",
-  "org": "moonshot"
- },
- {
-  "rank": 119,
+  "rank": 122,
   "name": "Grok 4 Fast (Non-Reasoning)",
   "org": "xai"
  },
  {
   "rank": 123,
+  "name": "Kimi K2 Preview (0905)",
+  "org": "moonshot"
+ },
+ {
+  "rank": 127,
   "name": "NVIDIA-Nemotron-3.5-Super-VL-120B-A12B (NVFP4)",
   "org": "nvidia"
  },
  {
-  "rank": 125,
+  "rank": 128,
   "name": "Mistral Large 3",
   "org": "mistral"
  },
  {
-  "rank": 130,
+  "rank": 134,
   "name": "Grok 3 Preview (02-24)",
   "org": "xai"
  },
  {
-  "rank": 132,
+  "rank": 136,
   "name": "Grok 4 (0709)",
   "org": "xai"
  },
  {
-  "rank": 138,
+  "rank": 142,
   "name": "Gemini 2.5 Flash Preview (09-2025)",
   "org": "google"
  },
  {
-  "rank": 139,
+  "rank": 143,
   "name": "o1 (2024-12-17)",
   "org": "openai"
  },
  {
-  "rank": 140,
-  "name": "Qwen3-235B-A22B (Non-Thinking)",
-  "org": "alibaba"
- },
- {
-  "rank": 141,
+  "rank": 144,
   "name": "Claude Sonnet 4 (Thinking 32K, 20250514)",
   "org": "anthropic"
  },
  {
-  "rank": 143,
+  "rank": 145,
+  "name": "Qwen3-235B-A22B (Non-Thinking)",
+  "org": "alibaba"
+ },
+ {
+  "rank": 147,
   "name": "LongCat-Flash-Chat",
   "org": "meituan"
  },
  {
-  "rank": 144,
+  "rank": 148,
   "name": "Qwen3-235B-A22B-Thinking (2507)",
   "org": "alibaba"
- },
- {
-  "rank": 148,
-  "name": "Qwen3-VL-235B-A22B-Thinking",
-  "org": "alibaba"
- },
- {
-  "rank": 149,
-  "name": "Hunyuan Vision 1.5 Thinking",
-  "org": "tencent"
  }
 ]
