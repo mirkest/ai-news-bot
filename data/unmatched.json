@@ -45,6 +45,11 @@
   "org": "baidu"
  },
  {
+  "rank": 51,
+  "name": "MiMo-V2.5-Pro",
+  "org": "xiaomi"
+ },
+ {
   "rank": 53,
   "name": "Grok 4.1 (Thinking)",
   "org": "xai"
