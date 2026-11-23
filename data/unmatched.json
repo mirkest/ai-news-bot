@@ -10,7 +10,7 @@
   "org": "google"
  },
  {
-  "rank": 38,
+  "rank": 37,
   "name": "Grok 4.20 Beta 1",
   "org": "xai"
  },
@@ -20,7 +20,7 @@
   "org": "alibaba"
  },
  {
-  "rank": 41,
+  "rank": 42,
   "name": "GPT-5.5 Instant",
   "org": "openai"
  },
@@ -40,7 +40,7 @@
   "org": "xai"
  },
  {
-  "rank": 50,
+  "rank": 49,
   "name": "ERNIE 5.1",
   "org": "baidu"
  },
@@ -70,7 +70,7 @@
   "org": "bytedance"
  },
  {
-  "rank": 69,
+  "rank": 70,
   "name": "DeepSeek-V4-Pro Preview (High)",
   "org": "deepseek"
  },
@@ -85,7 +85,7 @@
   "org": "baidu"
  },
  {
-  "rank": 78,
+  "rank": 79,
   "name": "MiMo-V2-Pro",
   "org": "xiaomi"
  },
@@ -100,7 +100,7 @@
   "org": "openai"
  },
  {
-  "rank": 86,
+  "rank": 88,
   "name": "ChatGPT-4o Latest (20250326)",
   "org": "openai"
  },
@@ -160,12 +160,12 @@
   "org": "anthropic"
  },
  {
-  "rank": 113,
+  "rank": 114,
   "name": "Muse Glimmer",
   "org": "meta"
  },
  {
-  "rank": 117,
+  "rank": 118,
   "name": "Qwen3-Max (2025-09-23)",
   "org": "alibaba"
  },
@@ -181,13 +181,13 @@
  },
  {
   "rank": 122,
-  "name": "Grok 4 Fast (Non-Reasoning)",
-  "org": "xai"
+  "name": "Kimi K2 Preview (0905)",
+  "org": "moonshot"
  },
  {
   "rank": 123,
-  "name": "Kimi K2 Preview (0905)",
-  "org": "moonshot"
+  "name": "Grok 4 Fast (Non-Reasoning)",
+  "org": "xai"
  },
  {
   "rank": 127,
@@ -195,7 +195,7 @@
   "org": "nvidia"
  },
  {
-  "rank": 128,
+  "rank": 129,
   "name": "Mistral Large 3",
   "org": "mistral"
  },
