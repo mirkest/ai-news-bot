@@ -220,6 +220,11 @@
   "org": "tencent"
  },
  {
+  "rank": 140,
+  "name": "Mistral Medium 3.1 (2508)",
+  "org": "mistral"
+ },
+ {
   "rank": 142,
   "name": "Gemini 2.5 Flash Preview (09-2025)",
   "org": "google"
