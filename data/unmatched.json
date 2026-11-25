@@ -130,6 +130,11 @@
   "org": "alibaba"
  },
  {
+  "rank": 101,
+  "name": "MiMo-V2.5",
+  "org": "xiaomi"
+ },
+ {
   "rank": 105,
   "name": "Grok 4.1 Fast (Reasoning)",
   "org": "xai"
