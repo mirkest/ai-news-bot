@@ -1129,6 +1129,7 @@
   "anthropic/claude-opus-5",
   "anthropic/claude-opus-5.5",
   "anthropic/claude-sonnet-5.5",
+  "baidu/ernie-5.5-flash-preview:free",
   "cohere/command-a-plus",
   "cohere/north-mini-code:free",
   "deepseek/deepseek-v4-pro-0813",
